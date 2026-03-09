@@ -1,0 +1,5 @@
+こんにちは！
+Hello!
+
+This is a test file for creating a "hello" PR.
+これは「こんにちは」PRを作成するためのテストファイルです。
