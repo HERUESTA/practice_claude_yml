@@ -1,0 +1,8 @@
+こんにちは！
+Hello!
+
+This is a greeting file created for the PR test.
+これは、PRテスト用に作成された挨拶ファイルです。
+
+今日も良い一日を！
+Have a wonderful day!
