@@ -1,0 +1,5 @@
+こんにちは！
+Hello!
+
+This file was created for the PR creation test.
+このファイルはPR作成テスト用に作成されました。
