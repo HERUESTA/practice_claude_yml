@@ -38,8 +38,5 @@ jobs:
         uses: anthropics/claude-code-action@beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          prompt: |
-            作業を開始する前に、まずissueの内容を読んで
-            英語のkebab-caseで適切なブランチ名を考え、
-            現在のブランチをその名前にリネームしてください。
-            例: feature/login-authentication, fix/login-bug
+          branch_prefix: "feature/"
+          branch_name_template: "{{prefix}}{{entityNumber}}"
