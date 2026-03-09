@@ -1,0 +1,4 @@
+こんにちは！
+Hello World!
+
+This is a test file for the PR creation test.
