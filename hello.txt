@@ -1,0 +1,4 @@
+こんにちは
+Hello
+
+This file was created for PR creation test.
