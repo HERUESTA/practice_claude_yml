@@ -34,3 +34,6 @@ jobs:
         uses: anthropics/claude-code-action@beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+        prompt: |
+          ブランチの命名規則：
+          - ブランチ名は"こんにちは/何か"としてください
