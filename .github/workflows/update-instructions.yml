@@ -8,9 +8,7 @@ on:
 
 jobs:
   update-instructions:
-    if: |
-      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '/instructions')) ||
-      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '/instructions'))
+    if: contains(github.event.comment.body, '/instructions') && (github.event_name == 'issue_comment' || github.event_name == 'pull_request_review_comment')
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -28,9 +26,10 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: |
-            以下の手順で「AIへの指摘内容」を取得してください：
+            以下のコマンドでこのPRの全コメントを取得してください：
+            gh api repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments
 
-            ${{ github.event.comment.in_reply_to_id != '' && format('返信元のレビューコメント（コメントID: {0}）を取得してください：\ngh api repos/{1}/pulls/comments/{0}\nこのコメントが「AIへの指摘内容」です。', github.event.comment.in_reply_to_id, github.repository) || format('このコメント自体が「AIへの指摘内容」です：\n{0}', github.event.comment.body) }}
+            取得したコメント一覧の中から、`/instructions` というコメント（コメントID: ${{ github.event.comment.id }}）の直前のコメントを「AIへの指摘内容」として使用してください。
 
             その指摘を読み取り、以下の手順を実行してください：
             1. `base.instructions.md` を読む（存在しない場合は新規作成）
@@ -38,6 +37,6 @@ jobs:
                - 「〜すること」「〜しないこと」の形式で簡潔に箇条書き
             3. 変更をコミットし、PRを作成する
                - PRタイトル: "instructions: <指摘の要約>"
-               - PRには「どの指摘をもとにしたか」をPR番号で記載する（PR #${{ github.event.issue.number || github.event.pull_request.number }}）
+               - PRには「どの指摘をもとにしたか」をPR番号で記載する（PR #${{ github.event.issue.number }}）
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
