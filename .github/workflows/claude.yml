@@ -40,3 +40,40 @@ jobs:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           branch_prefix: "feature/"
           branch_name_template: "{{prefix}}{{entityNumber}}"
+
+  update-instructions:
+    if: |
+      github.event_name == 'issue_comment' &&
+      contains(github.event.comment.body, '/instructions')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+      id-token: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code
+        uses: anthropics/claude-code-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            以下のコマンドでIssue #${{ github.event.issue.number }} のコメント一覧を確認してください：
+            gh issue view ${{ github.event.issue.number }} --comments --repo ${{ github.repository }}
+
+            コメントID ${{ github.event.comment.id }} が `/instructions` コマンドのコメントです。
+            その直前のコメントが「AIへの指摘内容」です。
+
+            その指摘を読み取り、以下の手順を実行してください：
+            1. `base.instructions.md` を読む（存在しない場合は新規作成）
+            2. 指摘内容をAIへの指示として整理し、重複がなければ追記する
+               - 「〜すること」「〜しないこと」の形式で簡潔に箇条書き
+            3. 変更をコミットし、PRを作成する
+               - PRタイトル: "instructions: <指摘の要約>"
+               - PRには「どの指摘をもとにしたか」をIssue番号で記載する
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
