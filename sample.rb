@@ -1,12 +1,12 @@
-def greet(name)
+def greet(name = "世界")
   "こんにちは、#{name}さん！"
 end
 
-def add(a, b)
+def add(a = 0, b = 0)
   a + b
 end
 
-def fizzbuzz(n)
+def fizzbuzz(n = 15)
   (1..n).map do |i|
     if i % 15 == 0
       "FizzBuzz"
