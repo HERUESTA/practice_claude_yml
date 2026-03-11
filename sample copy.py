@@ -1,28 +1,19 @@
 import json
 import datetime
 
-# Constants
-MIN_AGE = 20
-SCORE_THRESHOLD_HIGH = 80
-SCORE_THRESHOLD_MEDIUM = 60
-SCORE_THRESHOLD_LOW = 40
-RANK_HIGH = 3
-RANK_MEDIUM = 2
-RANK_LOW = 1
-
 def process(f, out):
     d = open(f).read()
     x = json.loads(d)
     res = []
     for u in x:
-        if u['age'] > MIN_AGE and u['active'] == True:
+        if u['age'] > 20 and u['active'] == True:
             score = 0
-            if u['score'] >= SCORE_THRESHOLD_HIGH:
-                score = RANK_HIGH
-            elif u['score'] >= SCORE_THRESHOLD_MEDIUM:
-                score = RANK_MEDIUM
-            elif u['score'] >= SCORE_THRESHOLD_LOW:
-                score = RANK_LOW
+            if u['score'] >= 80:
+                score = 3
+            elif u['score'] >= 60:
+                score = 2
+            elif u['score'] >= 40:
+                score = 1
             u['rank'] = score
             res.append(u)
     total = 0
