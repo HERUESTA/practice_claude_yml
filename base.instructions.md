@@ -21,11 +21,19 @@ Always implement proper error handling for:
 - File operations (reading/writing)
 - JSON parsing
 - Division operations (check for zero division)
+- Empty result sets that could cause division by zero
 
 ## Code Quality Standards
-- Use meaningful variable names instead of single-letter variables
+- Use meaningful variable names instead of single-letter variables (avoid `x`, `d`, `res`, `f`, `out`, `u`, `r`)
 - Add type annotations for function parameters and return values
 - Include docstrings for functions
-- Use context managers (`with` statements) for file operations
-- Avoid magic numbers - use named constants instead
+- Use context managers (`with` statements) for file operations to prevent resource leaks
+- Avoid magic numbers - use named constants instead (e.g., define `MIN_AGE = 20`, `SCORE_THRESHOLDS = [40, 60, 80]`)
 - Add appropriate comments for complex logic
+- Validate input parameters and handle edge cases (empty files, malformed JSON, etc.)
+
+## Resource Management
+Always use proper resource management patterns:
+- Use `with` statements for file operations
+- Close resources explicitly when `with` statements cannot be used
+- Handle exceptions that may prevent proper resource cleanup
