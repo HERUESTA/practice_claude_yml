@@ -35,8 +35,15 @@ jobs:
             1. `base.instructions.md` を読む（存在しない場合は新規作成）
             2. 指摘内容をAIへの指示として整理し、重複がなければ追記する
                - 「〜すること」「〜しないこと」の形式で簡潔に箇条書き
-            3. 変更をコミットし、PRを作成する
-               - PRタイトル: "instructions: <指摘の要約>"
-               - PRには「どの指摘をもとにしたか」をPR番号で記載する（PR #${{ github.event.issue.number }}）
+            3. 以下のコマンドを順番に実行してPRを作成する：
+               ```bash
+               git config user.name "github-actions[bot]"
+               git config user.email "github-actions[bot]@users.noreply.github.com"
+               git checkout -b "こんにちは/today-${{ github.run_number }}"
+               git add base.instructions.md
+               git commit -m "instructions: <指摘の要約>"
+               git push origin "こんにちは/today-${{ github.run_number }}"
+               gh pr create --title "instructions: <指摘の要約>" --body "PR #${{ github.event.issue.number }} の指摘をもとに作成" --base main
+               ```
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
