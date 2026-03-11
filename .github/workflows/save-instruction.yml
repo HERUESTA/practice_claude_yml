@@ -1,0 +1,50 @@
+name: Save Instruction
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+jobs:
+  save-instruction:
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude /instructions')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude /instructions'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Save instruction from review comment
+        uses: anthropics/claude-code-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          direct_prompt: |
+            このコメントが投稿されたスレッドの親レビューコメントを読み取り、
+            その指摘内容を汎用的なコーディングルールとして抽出してください。
+
+            ## 手順
+            1. 親レビューコメントの指摘内容を確認する
+            2. 以下のgitコマンドでmainから新しいブランチを作成する:
+               git checkout main && git pull origin main && git checkout -b instructions/add-[簡潔な説明]
+            3. .github/instructions/base.instructions.md の末尾にルールを追記する
+            4. git add .github/instructions/base.instructions.md && git commit -m "📝 Add instruction: [ルールタイトル]" && git push origin instructions/add-[簡潔な説明]
+            5. gh pr create で main へのPRを作成する
+
+            ## ルールの出力形式
+            ## [簡潔なルールタイトル]
+            - [具体的なルール内容]
+            > _Added from PR #[PR番号] on [日付]_
+
+            ## 重要
+            - 現在のブランチのコードは一切変更しないこと
+            - ルールの抽出と記録のみを行う
+            - 日本語で記述する
