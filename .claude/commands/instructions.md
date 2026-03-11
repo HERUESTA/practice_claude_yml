@@ -8,10 +8,20 @@
 
 1. このコマンドが呼び出されたスレッドの親コメント（レビュー指摘）を確認する
 2. 指摘内容を以下の形式で汎用的なルールに変換する
-3. **必ず `main` ブランチから新しいブランチ `instructions/add-[簡潔な説明]` を作成する**（現在作業中のブランチには一切コミットしないこと）
-4. `.github/instructions/base.instructions.md` の末尾にルールを追記する
-5. 変更を新しいブランチにコミットしてプッシュする
-6. `main` ブランチへのPRを作成する
+3. 以下のgitコマンドで **必ず `main` から新しいブランチを作成する**:
+   ```
+   git checkout main
+   git pull origin main
+   git checkout -b instructions/add-[簡潔な説明]
+   ```
+4. `.github/instructions/base.instructions.md` の末尾にルールを追記する（ファイルがなければ作成する）
+5. 以下のgitコマンドでコミット・プッシュする:
+   ```
+   git add .github/instructions/base.instructions.md
+   git commit -m "📝 Add instruction: [ルールタイトル]"
+   git push origin instructions/add-[簡潔な説明]
+   ```
+6. `gh pr create` で `main` へのPRを作成する
 
 ## ルールの出力形式
 
